@@ -4,7 +4,14 @@ import createDataContext from './createDataContext';
 const blogReduser = (state, action) => {
     switch(action.type){
         case 'addBlogPost':
-            return [...state, {id: Math.floor(Math.random() * 99999), title: `Blog Post #${state.length + 1}`}]
+            return [
+                ...state,
+                {
+                    id: Math.floor(Math.random() * 99999),
+                    title: action.payload.title,
+                    content: action.payload.content,
+                }
+            ]
         case 'deleteBlogPost':
             return state.filter(blogPost => blogPost.id !== action.payload)
         default:
@@ -13,7 +20,15 @@ const blogReduser = (state, action) => {
 }
 
 const addBlogPost = dispatch => {
-    return () => dispatch({ type: 'addBlogPost'})
+    return async (title, content, callback) => {
+        try{
+            // await axios.post
+            dispatch({type: 'addBlogPost', payload: {title, content}});
+            callback()
+        }catch (e){
+            dispatch({type: 'addBlogPost', payload: {title: e, content: e}});
+        }
+    }
 }
 
 const deleteBlogPost = dispatch => {
