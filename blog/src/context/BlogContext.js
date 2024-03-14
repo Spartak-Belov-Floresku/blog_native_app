@@ -12,6 +12,8 @@ const blogReduser = (state, action) => {
                     content: action.payload.content,
                 }
             ]
+        case 'editBlogPost':
+            return state.map(blogPost => blogPost.id === action.payload.id? action.payload: blogPost)
         case 'deleteBlogPost':
             return state.filter(blogPost => blogPost.id !== action.payload)
         default:
@@ -24,7 +26,8 @@ const addBlogPost = dispatch => {
         try{
             // await axios.post
             dispatch({type: 'addBlogPost', payload: {title, content}});
-            callback()
+            if (callback)
+                callback()
         }catch (e){
             dispatch({type: 'addBlogPost', payload: {title: e, content: e}});
         }
@@ -37,8 +40,19 @@ const deleteBlogPost = dispatch => {
     }
 }
 
+const editBlogPost = dispatch => {
+    return (id, title, content, callback) => {
+        dispatch({
+            type: 'editBlogPost',
+            payload : {id, title, content}
+        });
+        if (callback)
+            callback();
+    }
+}
+
 export const { Context, Provider } = createDataContext(
     blogReduser,
-    { addBlogPost, deleteBlogPost },
-    []
+    { addBlogPost, deleteBlogPost, editBlogPost, },
+    [{title: 'TEST POST', content: 'TEST CONTENT', id: 1}]
 );

@@ -28,7 +28,7 @@ export default function IndexScreen({navigation}) {
     )
 }
 
-IndexScreen.navigationOptions = ({navigation}) =>{
+IndexScreen.navigationOptions = ({navigation}) => {
     return {
         headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('Create')}>
