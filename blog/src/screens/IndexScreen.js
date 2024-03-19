@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity } from 'react-native'
 import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -6,7 +6,27 @@ import {Context} from '../context/BlogContext'
 
 export default function IndexScreen({navigation}) {
 
-    const {state, deleteBlogPost} = useContext(Context);
+    const {state, deleteBlogPost, getBlogPosts} = useContext(Context);
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            await getBlogPosts();
+        };
+
+        fetchData();
+
+        // triggered if index was called again
+        const listener = navigation.addListener('didFocus', () => {
+            fetchData();
+        });
+
+        return () => {
+            listener.remove();
+        }
+
+    }, [])
+
 
     return (
         <View>
